@@ -200,6 +200,12 @@
                                   NSError * _Nullable error,
                                   SDImageCacheType cacheType,
                                   NSURL * _Nullable imageURL) {
+                        if ([source.isPaused isEqualToString:@"true"]) {
+                            [weakSelf stopAnimating];
+                        } else {
+                            [weakSelf stopAnimating];
+                            [weakSelf startAnimating];
+                        }
                         if (error) {
                             weakSelf.hasErrored = YES;
                                 if (weakSelf.onFastImageError) {
