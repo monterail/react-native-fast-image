@@ -200,12 +200,6 @@
                                   NSError * _Nullable error,
                                   SDImageCacheType cacheType,
                                   NSURL * _Nullable imageURL) {
-                        if ([source.isPaused isEqualToString:@"true"]) {
-                            [weakSelf stopAnimating];
-                        } else {
-                            [weakSelf stopAnimating];
-                            [weakSelf startAnimating];
-                        }
                         if (error) {
                             weakSelf.hasErrored = YES;
                                 if (weakSelf.onFastImageError) {
@@ -215,7 +209,18 @@
                                     weakSelf.onFastImageLoadEnd(@{});
                                 }
                         } else {
+                            if ([source.isPaused isEqualToString:@"true"]) {
+                                [weakSelf stopAnimating];
+                            } else {
+                                [weakSelf stopAnimating];
+                                [weakSelf startAnimating];
+                            }
                             weakSelf.hasCompleted = YES;
+                            SDAnimatedImage * sdImage = (SDAnimatedImage *)weakSelf.image;
+                            if ([sdImage isKindOfClass: [SDAnimatedImage class]]) {
+                                [sdImage preloadAllFrames];
+                            }
+
                             [weakSelf sendOnLoad:image];
                             if (weakSelf.onFastImageLoadEnd) {
                                 weakSelf.onFastImageLoadEnd(@{});
